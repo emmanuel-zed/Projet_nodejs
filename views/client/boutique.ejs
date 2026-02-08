@@ -1,0 +1,116 @@
+<!-- Banniere boutique -->
+<div class="position-relative">
+  <div style="height: 200px; background: linear-gradient(135deg, #E65100 0%, #FF8F00 100%);"></div>
+  <div class="container">
+    <div class="row align-items-end" style="margin-top: -60px;">
+      <div class="col-auto">
+        <img src="<%= boutique.photoProfil %>" class="rounded-circle border border-4 border-white shadow"
+          width="120" height="120" style="object-fit: cover; background: #fff;"
+          onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(boutique.nom) %>&background=E65100&color=fff&size=120'">
+      </div>
+      <div class="col">
+        <h2 class="mb-0"><%= boutique.nom %></h2>
+        <p class="text-muted mb-0">
+          <i class="fas fa-map-marker-alt me-1"></i><%= boutique.localisation.commune %>, <%= boutique.localisation.ville %>
+          | <i class="fas fa-tag me-1"></i><%= boutique.specialite.replace('_', ' ') %>
+        </p>
+        <% if (boutique.noteGlobale > 0) { %>
+          <div class="mt-1">
+            <% for (let i = 1; i <= 5; i++) { %>
+              <i class="fas fa-star" style="color: <%= i <= Math.round(boutique.noteGlobale) ? '#FFC107' : '#E0E0E0' %>"></i>
+            <% } %>
+            <small class="text-muted">(<%= boutique.nombreAvis %> avis) - <%= boutique.noteGlobale %>/5</small>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="row">
+    <!-- Info boutique -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>A propos</h5>
+          <p><%= boutique.description %></p>
+          <hr>
+          <p class="mb-1"><i class="fas fa-clock me-2 text-primary"></i><%= boutique.horaires %></p>
+          <p class="mb-1"><i class="fas fa-phone me-2 text-primary"></i><%= boutique.telephone %></p>
+          <p class="mb-1">
+            <i class="fas fa-truck me-2 text-primary"></i>
+            <% if (boutique.livraison.disponible) { %>
+              Livraison disponible (<%= boutique.livraison.frais.toLocaleString() %> FCFA)
+            <% } else { %>
+              Retrait en boutique uniquement
+            <% } %>
+          </p>
+          <% if (boutique.verifie) { %>
+            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Boutique verifiee</span>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Produits -->
+    <div class="col-md-8">
+      <h4 class="mb-3">Produits (<%= produits.length %>)</h4>
+      <div class="row g-3">
+        <% if (produits.length === 0) { %>
+          <div class="col-12 text-center py-4">
+            <p class="text-muted">Aucun produit disponible pour le moment.</p>
+          </div>
+        <% } %>
+        <% produits.forEach(produit => { %>
+          <div class="col-6 col-lg-4">
+            <div class="card h-100 shadow-sm product-card">
+              <% if (produit.images && produit.images.length > 0) { %>
+                <img src="<%= produit.images[0] %>" class="card-img-top"
+                  alt="<%= produit.titre %>" style="height: 180px; object-fit: cover;">
+              <% } else { %>
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                  style="height: 180px;">
+                  <i class="fas fa-image text-muted" style="font-size: 2rem;"></i>
+                </div>
+              <% } %>
+              <div class="card-body d-flex flex-column">
+                <h6 class="card-title"><%= produit.titre %></h6>
+                <small class="text-muted mb-2">
+                  <i class="fas fa-clock me-1"></i><%= produit.delaiPreparation %> jour(s)
+                </small>
+                <div class="mt-auto">
+                  <span class="fw-bold text-primary"><%= produit.prix.toLocaleString() %> FCFA</span>
+                  <a href="/produit/<%= produit._id %>" class="btn btn-primary btn-sm w-100 mt-2">Commander</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+      <!-- Avis -->
+      <% if (avis.length > 0) { %>
+        <h4 class="mt-5 mb-3">Avis clients</h4>
+        <% avis.forEach(a => { %>
+          <div class="card mb-2">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <strong><%= a.client.prenom %> <%= a.client.nom %></strong>
+                <div>
+                  <% for (let i = 1; i <= 5; i++) { %>
+                    <i class="fas fa-star" style="color: <%= i <= a.note ? '#FFC107' : '#E0E0E0' %>; font-size: 0.8rem;"></i>
+                  <% } %>
+                </div>
+              </div>
+              <% if (a.commentaire) { %>
+                <p class="mb-0 mt-1 text-muted"><%= a.commentaire %></p>
+              <% } %>
+              <small class="text-muted"><%= new Date(a.createdAt).toLocaleDateString('fr-FR') %></small>
+            </div>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
+  </div>
+</div>

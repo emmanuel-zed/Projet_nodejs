@@ -1,0 +1,98 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h2 class="mb-4">
+            <i class="fas fa-edit text-primary me-2"></i>Modifier ma boutique
+          </h2>
+
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+
+          <form action="/vendeur/boutique/modifier" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label class="form-label">Nom de la boutique *</label>
+              <input type="text" class="form-control" name="nom" value="<%= boutique.nom %>" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Description *</label>
+              <textarea class="form-control" name="description" rows="3" required><%= boutique.description %></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Specialite *</label>
+              <select class="form-select" name="specialite" required>
+                <option value="patisserie" <%= boutique.specialite === 'patisserie' ? 'selected' : '' %>>Patisserie</option>
+                <option value="traiteur" <%= boutique.specialite === 'traiteur' ? 'selected' : '' %>>Traiteur</option>
+                <option value="cuisine_maison" <%= boutique.specialite === 'cuisine_maison' ? 'selected' : '' %>>Cuisine maison</option>
+                <option value="boulangerie" <%= boutique.specialite === 'boulangerie' ? 'selected' : '' %>>Boulangerie</option>
+                <option value="boissons" <%= boutique.specialite === 'boissons' ? 'selected' : '' %>>Boissons</option>
+                <option value="autre" <%= boutique.specialite === 'autre' ? 'selected' : '' %>>Autre</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Commune *</label>
+                <input type="text" class="form-control" name="commune" value="<%= boutique.localisation.commune %>" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Adresse</label>
+                <input type="text" class="form-control" name="details" value="<%= boutique.localisation.details || '' %>">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Telephone</label>
+                <input type="tel" class="form-control" name="telephone" value="<%= boutique.telephone || '' %>">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Horaires</label>
+                <input type="text" class="form-control" name="horaires" value="<%= boutique.horaires || '' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="livraisonDisponible"
+                  id="livraisonDisponible" <%= boutique.livraison.disponible ? 'checked' : '' %>
+                  onchange="document.getElementById('fraisDiv').style.display = this.checked ? 'block' : 'none'">
+                <label class="form-check-label" for="livraisonDisponible">Livraison disponible</label>
+              </div>
+            </div>
+
+            <div class="mb-3" id="fraisDiv" style="display: <%= boutique.livraison.disponible ? 'block' : 'none' %>;">
+              <label class="form-label">Frais de livraison (FCFA)</label>
+              <input type="number" class="form-control" name="fraisLivraison"
+                value="<%= boutique.livraison.frais || 0 %>" min="0" style="width: 200px;">
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Photo de profil</label>
+                <input type="file" class="form-control" name="photoProfil" accept="image/*">
+                <img src="<%= boutique.photoProfil %>" class="rounded mt-2" style="width: 60px; height: 60px; object-fit: cover;"
+                  onerror="this.style.display='none'">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Photo banniere</label>
+                <input type="file" class="form-control" name="photoBanniere" accept="image/*">
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary btn-lg flex-fill">
+                <i class="fas fa-save me-2"></i>Enregistrer
+              </button>
+              <a href="/vendeur/tableau-de-bord" class="btn btn-outline-secondary btn-lg">Annuler</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

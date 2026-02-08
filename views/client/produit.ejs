@@ -1,0 +1,156 @@
+<div class="container py-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+      <li class="breadcrumb-item"><a href="/explorer">Explorer</a></li>
+      <li class="breadcrumb-item"><a href="/boutique/<%= produit.boutique.slug %>"><%= produit.boutique.nom %></a></li>
+      <li class="breadcrumb-item active"><%= produit.titre %></li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <!-- Images -->
+    <div class="col-md-6 mb-4">
+      <% if (produit.images && produit.images.length > 0) { %>
+        <img src="<%= produit.images[0] %>" class="img-fluid rounded shadow"
+          alt="<%= produit.titre %>" style="width: 100%; max-height: 400px; object-fit: cover;">
+        <% if (produit.images.length > 1) { %>
+          <div class="d-flex gap-2 mt-2">
+            <% produit.images.forEach((img, i) => { %>
+              <img src="<%= img %>" class="rounded border" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                onclick="document.querySelector('.img-fluid').src = this.src" alt="Photo <%= i + 1 %>">
+            <% }); %>
+          </div>
+        <% } %>
+      <% } else { %>
+        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+          <i class="fas fa-image text-muted" style="font-size: 5rem;"></i>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Details -->
+    <div class="col-md-6">
+      <h2><%= produit.titre %></h2>
+
+      <div class="mb-3">
+        <a href="/boutique/<%= produit.boutique.slug %>" class="text-decoration-none">
+          <i class="fas fa-store me-1"></i><%= produit.boutique.nom %>
+        </a>
+        <span class="text-muted ms-2">
+          <i class="fas fa-map-marker-alt me-1"></i><%= produit.boutique.localisation.commune %>
+        </span>
+      </div>
+
+      <div class="display-6 text-primary fw-bold mb-3">
+        <%= produit.prix.toLocaleString() %> FCFA
+      </div>
+
+      <div class="mb-3">
+        <% if (produit.noteGlobale > 0) { %>
+          <% for (let i = 1; i <= 5; i++) { %>
+            <i class="fas fa-star" style="color: <%= i <= Math.round(produit.noteGlobale) ? '#FFC107' : '#E0E0E0' %>"></i>
+          <% } %>
+          <small class="text-muted">(<%= produit.nombreAvis %> avis)</small>
+        <% } else { %>
+          <small class="text-muted">Pas encore d'avis</small>
+        <% } %>
+      </div>
+
+      <p class="text-muted"><%= produit.description %></p>
+
+      <table class="table table-sm">
+        <% if (produit.nombreParts) { %>
+          <tr><td class="fw-bold"><i class="fas fa-users me-2"></i>Nombre de parts</td><td><%= produit.nombreParts %></td></tr>
+        <% } %>
+        <tr><td class="fw-bold"><i class="fas fa-clock me-2"></i>Delai de preparation</td><td><%= produit.delaiPreparation %> jour(s)</td></tr>
+        <tr>
+          <td class="fw-bold"><i class="fas fa-truck me-2"></i>Mode de recuperation</td>
+          <td>
+            <% if (produit.modeRecuperation.retrait) { %><span class="badge bg-info me-1">Retrait</span><% } %>
+            <% if (produit.modeRecuperation.livraison) { %><span class="badge bg-success">Livraison</span><% } %>
+          </td>
+        </tr>
+        <tr><td class="fw-bold"><i class="fas fa-shopping-bag me-2"></i>Commandes</td><td><%= produit.nombreCommandes %> commande(s)</td></tr>
+      </table>
+
+      <% if (produit.disponible) { %>
+        <form action="/panier/ajouter" method="POST" class="mt-3">
+          <input type="hidden" name="produitId" value="<%= produit._id %>">
+          <div class="row g-2 mb-3">
+            <div class="col-4">
+              <label class="form-label">Quantite</label>
+              <input type="number" class="form-control" name="quantite" value="1" min="1">
+            </div>
+            <div class="col-8">
+              <label class="form-label">Options / Personnalisation</label>
+              <input type="text" class="form-control" name="options" placeholder="Ex: couleur rose, prenom Marie">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg w-100">
+            <i class="fas fa-cart-plus me-2"></i>Ajouter au panier
+          </button>
+        </form>
+      <% } else { %>
+        <div class="alert alert-warning">
+          <i class="fas fa-exclamation-triangle me-2"></i>Ce produit n'est pas disponible actuellement.
+        </div>
+      <% } %>
+
+      <div class="mt-3 p-3 bg-light rounded">
+        <small>
+          <i class="fas fa-phone me-2"></i>Contact vendeur : <%= produit.boutique.telephone %><br>
+          <i class="fas fa-clock me-2"></i>Horaires : <%= produit.boutique.horaires %>
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Autres produits -->
+  <% if (autresProduits.length > 0) { %>
+    <h4 class="mt-5 mb-3">Autres produits de cette boutique</h4>
+    <div class="row g-3">
+      <% autresProduits.forEach(p => { %>
+        <div class="col-6 col-md-3">
+          <div class="card h-100 shadow-sm product-card">
+            <% if (p.images && p.images.length > 0) { %>
+              <img src="<%= p.images[0] %>" class="card-img-top" style="height: 150px; object-fit: cover;">
+            <% } else { %>
+              <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                <i class="fas fa-image text-muted"></i>
+              </div>
+            <% } %>
+            <div class="card-body">
+              <h6><%= p.titre %></h6>
+              <strong class="text-primary"><%= p.prix.toLocaleString() %> FCFA</strong>
+              <a href="/produit/<%= p._id %>" class="btn btn-outline-primary btn-sm w-100 mt-2">Voir</a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <!-- Avis -->
+  <% if (avis.length > 0) { %>
+    <h4 class="mt-5 mb-3">Avis clients</h4>
+    <% avis.forEach(a => { %>
+      <div class="card mb-2">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <strong><%= a.client.prenom %> <%= a.client.nom %></strong>
+            <div>
+              <% for (let i = 1; i <= 5; i++) { %>
+                <i class="fas fa-star" style="color: <%= i <= a.note ? '#FFC107' : '#E0E0E0' %>; font-size: 0.8rem;"></i>
+              <% } %>
+            </div>
+          </div>
+          <% if (a.commentaire) { %>
+            <p class="mb-0 mt-1"><%= a.commentaire %></p>
+          <% } %>
+          <small class="text-muted"><%= new Date(a.createdAt).toLocaleDateString('fr-FR') %></small>
+        </div>
+      </div>
+    <% }); %>
+  <% } %>
+</div>

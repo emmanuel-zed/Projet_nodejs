@@ -1,0 +1,148 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-0"><i class="fas fa-store me-2"></i><%= boutique.nom %></h2>
+      <small class="text-muted"><%= boutique.localisation.commune %> | <%= boutique.specialite.replace('_', ' ') %></small>
+    </div>
+    <div>
+      <a href="/vendeur/boutique/modifier" class="btn btn-outline-primary btn-sm me-2">
+        <i class="fas fa-edit me-1"></i>Modifier
+      </a>
+      <a href="/boutique/<%= boutique.slug %>" class="btn btn-outline-secondary btn-sm" target="_blank">
+        <i class="fas fa-external-link-alt me-1"></i>Voir ma boutique
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="card bg-primary text-white shadow-sm">
+        <div class="card-body text-center">
+          <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+          <h4><%= totalVentes.toLocaleString() %></h4>
+          <small>FCFA de ventes</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card bg-warning text-dark shadow-sm">
+        <div class="card-body text-center">
+          <i class="fas fa-clock fa-2x mb-2"></i>
+          <h4><%= commandesEnAttente %></h4>
+          <small>En attente</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card bg-info text-white shadow-sm">
+        <div class="card-body text-center">
+          <i class="fas fa-fire fa-2x mb-2"></i>
+          <h4><%= commandesEnPrep %></h4>
+          <small>En preparation</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card bg-success text-white shadow-sm">
+        <div class="card-body text-center">
+          <i class="fas fa-box-open fa-2x mb-2"></i>
+          <h4><%= totalProduits %></h4>
+          <small>Produits</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Commandes recentes -->
+    <div class="col-md-7 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong>Commandes recentes</strong>
+          <a href="/vendeur/commandes" class="btn btn-sm btn-outline-primary">Tout voir</a>
+        </div>
+        <div class="card-body">
+          <% if (commandesRecentes.length === 0) { %>
+            <p class="text-muted text-center py-3">Aucune commande pour le moment.</p>
+          <% } %>
+          <% commandesRecentes.forEach(cmd => { %>
+            <%
+              const colors = { en_attente: 'warning', confirmee: 'info', en_preparation: 'primary', prete: 'success', annulee: 'danger' };
+              const labels = { en_attente: 'En attente', confirmee: 'Confirmee', en_preparation: 'En prep.', prete: 'Prete', livree: 'Livree', recuperee: 'Recuperee', annulee: 'Annulee' };
+            %>
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+              <div>
+                <strong>#<%= cmd.numero %></strong>
+                <br>
+                <small class="text-muted">
+                  <%= cmd.client ? cmd.client.prenom + ' ' + cmd.client.nom : 'Client' %>
+                  | <%= new Date(cmd.createdAt).toLocaleDateString('fr-FR') %>
+                </small>
+              </div>
+              <div class="text-end">
+                <span class="badge bg-<%= colors[cmd.statut] || 'secondary' %>"><%= labels[cmd.statut] || cmd.statut %></span>
+                <br>
+                <strong class="text-primary"><%= cmd.montantFinal.toLocaleString() %> F</strong>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Produits recents -->
+    <div class="col-md-5 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong>Mes produits</strong>
+          <a href="/vendeur/produits/ajouter" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus me-1"></i>Ajouter
+          </a>
+        </div>
+        <div class="card-body">
+          <% if (produits.length === 0) { %>
+            <p class="text-muted text-center py-3">
+              Aucun produit. <a href="/vendeur/produits/ajouter">Ajoutez votre premier produit !</a>
+            </p>
+          <% } %>
+          <% produits.forEach(p => { %>
+            <div class="d-flex align-items-center py-2 border-bottom">
+              <% if (p.images && p.images.length > 0) { %>
+                <img src="<%= p.images[0] %>" class="rounded me-2" style="width: 45px; height: 45px; object-fit: cover;">
+              <% } else { %>
+                <div class="bg-light rounded me-2 d-flex align-items-center justify-content-center"
+                  style="width: 45px; height: 45px;">
+                  <i class="fas fa-image text-muted"></i>
+                </div>
+              <% } %>
+              <div class="flex-grow-1">
+                <strong><%= p.titre %></strong>
+                <br><small class="text-primary"><%= p.prix.toLocaleString() %> FCFA</small>
+              </div>
+              <span class="badge bg-<%= p.disponible ? 'success' : 'secondary' %>">
+                <%= p.disponible ? 'Actif' : 'Inactif' %>
+              </span>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- Note boutique -->
+      <div class="card shadow-sm mt-3">
+        <div class="card-body text-center">
+          <h5>Note de la boutique</h5>
+          <div class="display-4 text-warning mb-2">
+            <%= boutique.noteGlobale || '-' %>
+          </div>
+          <div>
+            <% for (let i = 1; i <= 5; i++) { %>
+              <i class="fas fa-star" style="color: <%= i <= Math.round(boutique.noteGlobale) ? '#FFC107' : '#E0E0E0' %>; font-size: 1.2rem;"></i>
+            <% } %>
+          </div>
+          <small class="text-muted"><%= boutique.nombreAvis %> avis</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,114 @@
+<div class="container py-4">
+  <h2 class="mb-4">Explorer les produits</h2>
+
+  <!-- Filtres -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <form action="/explorer" method="GET" class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label">Recherche</label>
+          <input type="text" class="form-control" name="q" value="<%= filtres.q || '' %>" placeholder="Mot-cle...">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Categorie</label>
+          <select class="form-select" name="categorie">
+            <option value="">Toutes</option>
+            <option value="gateau_anniversaire" <%= filtres.categorie === 'gateau_anniversaire' ? 'selected' : '' %>>Gateaux anniversaire</option>
+            <option value="wedding_cake" <%= filtres.categorie === 'wedding_cake' ? 'selected' : '' %>>Wedding cakes</option>
+            <option value="cupcakes" <%= filtres.categorie === 'cupcakes' ? 'selected' : '' %>>Cupcakes</option>
+            <option value="traiteur_mariage" <%= filtres.categorie === 'traiteur_mariage' ? 'selected' : '' %>>Traiteur mariage</option>
+            <option value="traiteur_bapteme" <%= filtres.categorie === 'traiteur_bapteme' ? 'selected' : '' %>>Traiteur bapteme</option>
+            <option value="traiteur_entreprise" <%= filtres.categorie === 'traiteur_entreprise' ? 'selected' : '' %>>Traiteur entreprise</option>
+            <option value="plat_ivoirien" <%= filtres.categorie === 'plat_ivoirien' ? 'selected' : '' %>>Plats ivoiriens</option>
+            <option value="cuisine_internationale" <%= filtres.categorie === 'cuisine_internationale' ? 'selected' : '' %>>Cuisine internationale</option>
+            <option value="jus_naturel" <%= filtres.categorie === 'jus_naturel' ? 'selected' : '' %>>Jus naturels</option>
+            <option value="bissap" <%= filtres.categorie === 'bissap' ? 'selected' : '' %>>Bissap</option>
+            <option value="pain_artisanal" <%= filtres.categorie === 'pain_artisanal' ? 'selected' : '' %>>Pain artisanal</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Commune</label>
+          <select class="form-select" name="commune">
+            <option value="">Toutes</option>
+            <option value="Cocody" <%= filtres.commune === 'Cocody' ? 'selected' : '' %>>Cocody</option>
+            <option value="Plateau" <%= filtres.commune === 'Plateau' ? 'selected' : '' %>>Plateau</option>
+            <option value="Marcory" <%= filtres.commune === 'Marcory' ? 'selected' : '' %>>Marcory</option>
+            <option value="Yopougon" <%= filtres.commune === 'Yopougon' ? 'selected' : '' %>>Yopougon</option>
+            <option value="Abobo" <%= filtres.commune === 'Abobo' ? 'selected' : '' %>>Abobo</option>
+            <option value="Treichville" <%= filtres.commune === 'Treichville' ? 'selected' : '' %>>Treichville</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Trier par</label>
+          <select class="form-select" name="tri">
+            <option value="">Plus recents</option>
+            <option value="prix_asc" <%= filtres.tri === 'prix_asc' ? 'selected' : '' %>>Prix croissant</option>
+            <option value="prix_desc" <%= filtres.tri === 'prix_desc' ? 'selected' : '' %>>Prix decroissant</option>
+            <option value="populaire" <%= filtres.tri === 'populaire' ? 'selected' : '' %>>Plus populaires</option>
+            <option value="note" <%= filtres.tri === 'note' ? 'selected' : '' %>>Mieux notes</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Prix (FCFA)</label>
+          <div class="d-flex gap-2">
+            <input type="number" class="form-control" name="prix_min" placeholder="Min" value="<%= filtres.prix_min || '' %>">
+            <input type="number" class="form-control" name="prix_max" placeholder="Max" value="<%= filtres.prix_max || '' %>">
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-filter me-1"></i>Filtrer</button>
+          <a href="/explorer" class="btn btn-outline-secondary ms-2">Reinitialiser</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Resultats -->
+  <p class="text-muted"><%= produits.length %> produit(s) trouve(s)</p>
+
+  <div class="row g-4">
+    <% if (produits.length === 0) { %>
+      <div class="col-12 text-center py-5">
+        <i class="fas fa-search text-muted" style="font-size: 3rem;"></i>
+        <p class="text-muted mt-3">Aucun produit ne correspond a votre recherche.</p>
+      </div>
+    <% } %>
+    <% produits.forEach(produit => { %>
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card h-100 shadow-sm product-card">
+          <% if (produit.images && produit.images.length > 0) { %>
+            <img src="<%= produit.images[0] %>" class="card-img-top" alt="<%= produit.titre %>"
+              style="height: 200px; object-fit: cover;">
+          <% } else { %>
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+              style="height: 200px;">
+              <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
+            </div>
+          <% } %>
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title"><%= produit.titre %></h6>
+            <% if (produit.boutique) { %>
+              <small class="text-muted mb-1">
+                <i class="fas fa-store me-1"></i><%= produit.boutique.nom %>
+              </small>
+              <small class="text-muted mb-2">
+                <i class="fas fa-map-marker-alt me-1"></i><%= produit.boutique.localisation.commune %>
+              </small>
+            <% } %>
+            <% if (produit.delaiPreparation > 0) { %>
+              <small class="text-muted mb-2">
+                <i class="fas fa-clock me-1"></i><%= produit.delaiPreparation %> jour(s) de preparation
+              </small>
+            <% } %>
+            <div class="mt-auto">
+              <span class="fw-bold text-primary"><%= produit.prix.toLocaleString() %> FCFA</span>
+              <a href="/produit/<%= produit._id %>" class="btn btn-outline-primary btn-sm w-100 mt-2">
+                Voir details
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
