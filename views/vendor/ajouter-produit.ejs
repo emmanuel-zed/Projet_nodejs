@@ -1,0 +1,115 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h2 class="mb-4">
+            <i class="fas fa-plus-circle text-primary me-2"></i>Ajouter un produit
+          </h2>
+
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+
+          <form action="/vendeur/produits/ajouter" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label class="form-label">Titre du produit *</label>
+              <input type="text" class="form-control" name="titre"
+                placeholder="Ex: Gateau d'anniversaire 3 etages - Theme Princesse" required maxlength="150">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Description *</label>
+              <textarea class="form-control" name="description" rows="4"
+                placeholder="Decrivez votre produit en detail : ingredients, taille, personnalisation possible..."
+                required maxlength="2000"></textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Prix (FCFA) *</label>
+                <input type="number" class="form-control" name="prix"
+                  placeholder="Ex: 25000" min="0" required>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Nombre de parts</label>
+                <input type="number" class="form-control" name="nombreParts"
+                  placeholder="Ex: 20" min="1">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Delai preparation (jours) *</label>
+                <input type="number" class="form-control" name="delaiPreparation"
+                  placeholder="Ex: 3" min="0" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Categorie *</label>
+              <select class="form-select" name="categorie" required>
+                <option value="">Choisir...</option>
+                <optgroup label="Patisserie">
+                  <option value="gateau_anniversaire">Gateau d'anniversaire</option>
+                  <option value="wedding_cake">Wedding cake</option>
+                  <option value="gateau_bapteme">Gateau de bapteme</option>
+                  <option value="cupcakes">Cupcakes</option>
+                  <option value="macarons">Macarons</option>
+                  <option value="viennoiseries">Viennoiseries</option>
+                  <option value="patisserie_traditionnelle">Patisserie traditionnelle</option>
+                </optgroup>
+                <optgroup label="Traiteur">
+                  <option value="traiteur_mariage">Traiteur mariage</option>
+                  <option value="traiteur_bapteme">Traiteur bapteme</option>
+                  <option value="traiteur_anniversaire">Traiteur anniversaire</option>
+                  <option value="traiteur_dot">Traiteur dot</option>
+                  <option value="traiteur_entreprise">Traiteur entreprise</option>
+                </optgroup>
+                <optgroup label="Plats">
+                  <option value="plat_ivoirien">Plat ivoirien</option>
+                  <option value="cuisine_internationale">Cuisine internationale</option>
+                  <option value="plat_dietetique">Plat dietetique</option>
+                </optgroup>
+                <optgroup label="Boulangerie">
+                  <option value="pain_artisanal">Pain artisanal</option>
+                  <option value="sandwich">Sandwich</option>
+                </optgroup>
+                <optgroup label="Boissons">
+                  <option value="jus_naturel">Jus naturel</option>
+                  <option value="bissap">Bissap / Gnamakoudji</option>
+                  <option value="cocktail">Cocktail</option>
+                </optgroup>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Mode de recuperation</label>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="retrait" id="retrait" value="on" checked>
+                  <label class="form-check-label" for="retrait">Retrait en boutique</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="livraison" id="livraison" value="on">
+                  <label class="form-check-label" for="livraison">Livraison possible</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Photos du produit (max 5)</label>
+              <input type="file" class="form-control" name="images" accept="image/*" multiple>
+              <small class="text-muted">Formats acceptes : JPEG, PNG, WebP. Max 5MB par image.</small>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary btn-lg flex-fill">
+                <i class="fas fa-plus me-2"></i>Ajouter le produit
+              </button>
+              <a href="/vendeur/produits" class="btn btn-outline-secondary btn-lg">Annuler</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4">
+            <i class="fas fa-user text-primary"></i> Mon Profil
+          </h2>
+
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+
+          <div class="text-center mb-4">
+            <img src="<%= user.photo %>" class="rounded-circle" width="100" height="100"
+              style="object-fit: cover;" alt="Photo de profil"
+              onerror="this.src='https://ui-avatars.com/api/?name=<%= user.prenom %>+<%= user.nom %>&background=E65100&color=fff&size=100'">
+          </div>
+
+          <form action="/auth/profil" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Nom</label>
+                <input type="text" class="form-control" name="nom" value="<%= user.nom %>" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Prenom</label>
+                <input type="text" class="form-control" name="prenom" value="<%= user.prenom %>" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" value="<%= user.email %>" disabled>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Telephone</label>
+              <input type="tel" class="form-control" name="telephone" value="<%= user.telephone %>">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Commune</label>
+              <input type="text" class="form-control" name="commune"
+                value="<%= user.adresse ? user.adresse.commune || '' : '' %>">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Photo de profil</label>
+              <input type="file" class="form-control" name="photo" accept="image/*">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fas fa-save me-2"></i>Enregistrer
+            </button>
+          </form>
+
+          <div class="mt-3 p-3 bg-light rounded">
+            <small class="text-muted">
+              <strong>Role :</strong> <%= user.role === 'vendeur' ? 'Vendeur' : user.role === 'admin' ? 'Administrateur' : 'Client' %><br>
+              <strong>Membre depuis :</strong> <%= new Date(user.createdAt).toLocaleDateString('fr-FR') %>
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

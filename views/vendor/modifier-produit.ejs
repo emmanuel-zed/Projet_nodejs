@@ -1,0 +1,119 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h2 class="mb-4">
+            <i class="fas fa-edit text-primary me-2"></i>Modifier le produit
+          </h2>
+
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+
+          <form action="/vendeur/produits/<%= produit._id %>/modifier" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label class="form-label">Titre *</label>
+              <input type="text" class="form-control" name="titre" value="<%= produit.titre %>" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Description *</label>
+              <textarea class="form-control" name="description" rows="4" required><%= produit.description %></textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Prix (FCFA) *</label>
+                <input type="number" class="form-control" name="prix" value="<%= produit.prix %>" min="0" required>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Nombre de parts</label>
+                <input type="number" class="form-control" name="nombreParts" value="<%= produit.nombreParts || '' %>" min="1">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Delai preparation (jours) *</label>
+                <input type="number" class="form-control" name="delaiPreparation" value="<%= produit.delaiPreparation %>" min="0" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Categorie *</label>
+              <select class="form-select" name="categorie" required>
+                <optgroup label="Patisserie">
+                  <option value="gateau_anniversaire" <%= produit.categorie === 'gateau_anniversaire' ? 'selected' : '' %>>Gateau d'anniversaire</option>
+                  <option value="wedding_cake" <%= produit.categorie === 'wedding_cake' ? 'selected' : '' %>>Wedding cake</option>
+                  <option value="gateau_bapteme" <%= produit.categorie === 'gateau_bapteme' ? 'selected' : '' %>>Gateau de bapteme</option>
+                  <option value="cupcakes" <%= produit.categorie === 'cupcakes' ? 'selected' : '' %>>Cupcakes</option>
+                  <option value="macarons" <%= produit.categorie === 'macarons' ? 'selected' : '' %>>Macarons</option>
+                </optgroup>
+                <optgroup label="Traiteur">
+                  <option value="traiteur_mariage" <%= produit.categorie === 'traiteur_mariage' ? 'selected' : '' %>>Traiteur mariage</option>
+                  <option value="traiteur_bapteme" <%= produit.categorie === 'traiteur_bapteme' ? 'selected' : '' %>>Traiteur bapteme</option>
+                  <option value="traiteur_entreprise" <%= produit.categorie === 'traiteur_entreprise' ? 'selected' : '' %>>Traiteur entreprise</option>
+                </optgroup>
+                <optgroup label="Plats">
+                  <option value="plat_ivoirien" <%= produit.categorie === 'plat_ivoirien' ? 'selected' : '' %>>Plat ivoirien</option>
+                  <option value="cuisine_internationale" <%= produit.categorie === 'cuisine_internationale' ? 'selected' : '' %>>Cuisine internationale</option>
+                  <option value="plat_dietetique" <%= produit.categorie === 'plat_dietetique' ? 'selected' : '' %>>Plat dietetique</option>
+                </optgroup>
+                <optgroup label="Boissons">
+                  <option value="jus_naturel" <%= produit.categorie === 'jus_naturel' ? 'selected' : '' %>>Jus naturel</option>
+                  <option value="bissap" <%= produit.categorie === 'bissap' ? 'selected' : '' %>>Bissap</option>
+                </optgroup>
+                <option value="autre" <%= produit.categorie === 'autre' ? 'selected' : '' %>>Autre</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="disponible" id="disponible"
+                  <%= produit.disponible ? 'checked' : '' %>>
+                <label class="form-check-label" for="disponible">Produit disponible</label>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Mode de recuperation</label>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="retrait" id="retrait" value="on"
+                    <%= produit.modeRecuperation.retrait ? 'checked' : '' %>>
+                  <label class="form-check-label" for="retrait">Retrait en boutique</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="livraison" id="livraisonMode" value="on"
+                    <%= produit.modeRecuperation.livraison ? 'checked' : '' %>>
+                  <label class="form-check-label" for="livraisonMode">Livraison possible</label>
+                </div>
+              </div>
+            </div>
+
+            <% if (produit.images && produit.images.length > 0) { %>
+              <div class="mb-3">
+                <label class="form-label">Photos actuelles</label>
+                <div class="d-flex gap-2">
+                  <% produit.images.forEach(img => { %>
+                    <img src="<%= img %>" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
+
+            <div class="mb-3">
+              <label class="form-label">Remplacer les photos</label>
+              <input type="file" class="form-control" name="images" accept="image/*" multiple>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary btn-lg flex-fill">
+                <i class="fas fa-save me-2"></i>Enregistrer
+              </button>
+              <a href="/vendeur/produits" class="btn btn-outline-secondary btn-lg">Annuler</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

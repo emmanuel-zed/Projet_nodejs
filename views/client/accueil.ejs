@@ -1,0 +1,158 @@
+<!-- Hero Section -->
+<section class="hero-section text-white text-center py-5" style="background: linear-gradient(135deg, #E65100 0%, #FF8F00 100%);">
+  <div class="container py-5">
+    <h1 class="display-4 fw-bold">SAVEURS CI</h1>
+    <p class="lead mb-4">La vitrine digitale des talents culinaires ivoiriens</p>
+    <p class="mb-4">Decouvrez les meilleurs patissiers, traiteurs et cuisiniers pres de chez vous</p>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form action="/explorer" method="GET" class="d-flex">
+          <input type="search" name="q" class="form-control form-control-lg me-2"
+            placeholder="Que cherchez-vous ? (gateau, traiteur, attieke...)">
+          <button type="submit" class="btn btn-dark btn-lg px-4">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-4">Categories populaires</h2>
+    <div class="row g-3 justify-content-center">
+      <% const cats = [
+        { id: 'gateau_anniversaire', icon: 'birthday-cake', label: 'Gateaux anniversaire', color: '#E91E63' },
+        { id: 'wedding_cake', icon: 'heart', label: 'Wedding cakes', color: '#9C27B0' },
+        { id: 'traiteur_mariage', icon: 'glass-cheers', label: 'Traiteur mariage', color: '#673AB7' },
+        { id: 'plat_ivoirien', icon: 'drumstick-bite', label: 'Plats ivoiriens', color: '#FF5722' },
+        { id: 'jus_naturel', icon: 'blender', label: 'Jus naturels', color: '#4CAF50' },
+        { id: 'cupcakes', icon: 'cookie', label: 'Cupcakes', color: '#FF9800' }
+      ]; %>
+      <% cats.forEach(cat => { %>
+        <div class="col-6 col-md-4 col-lg-2">
+          <a href="/explorer?categorie=<%= cat.id %>" class="text-decoration-none">
+            <div class="card text-center p-3 h-100 border-0 shadow-sm category-card">
+              <div class="mb-2">
+                <i class="fas fa-<%= cat.icon %>" style="font-size: 2rem; color: <%= cat.color %>"></i>
+              </div>
+              <small class="fw-bold text-dark"><%= cat.label %></small>
+            </div>
+          </a>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- Produits populaires -->
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Produits populaires</h2>
+      <a href="/explorer" class="btn btn-outline-primary">Tout voir <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+    <div class="row g-4">
+      <% if (produitsPopulaires.length === 0) { %>
+        <div class="col-12 text-center py-5">
+          <i class="fas fa-store text-muted" style="font-size: 3rem;"></i>
+          <p class="text-muted mt-3">Aucun produit disponible pour le moment. Soyez le premier vendeur !</p>
+          <a href="/auth/inscription" class="btn btn-primary mt-2">Ouvrir ma boutique</a>
+        </div>
+      <% } %>
+      <% produitsPopulaires.forEach(produit => { %>
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="card h-100 shadow-sm product-card">
+            <% if (produit.images && produit.images.length > 0) { %>
+              <img src="<%= produit.images[0] %>" class="card-img-top" alt="<%= produit.titre %>"
+                style="height: 200px; object-fit: cover;">
+            <% } else { %>
+              <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                style="height: 200px;">
+                <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
+              </div>
+            <% } %>
+            <div class="card-body d-flex flex-column">
+              <h6 class="card-title"><%= produit.titre %></h6>
+              <% if (produit.boutique) { %>
+                <small class="text-muted mb-2">
+                  <i class="fas fa-store me-1"></i><%= produit.boutique.nom %>
+                </small>
+              <% } %>
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="fw-bold text-primary fs-5"><%= produit.prix.toLocaleString() %> FCFA</span>
+                </div>
+                <a href="/produit/<%= produit._id %>" class="btn btn-outline-primary btn-sm w-100 mt-2">
+                  Voir details
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- Boutiques vedettes -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-4">Boutiques vedettes</h2>
+    <div class="row g-4">
+      <% if (boutiquesVedettes.length === 0) { %>
+        <div class="col-12 text-center py-4">
+          <p class="text-muted">Aucune boutique pour le moment.</p>
+        </div>
+      <% } %>
+      <% boutiquesVedettes.forEach(boutique => { %>
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm">
+            <div class="position-relative">
+              <div class="bg-primary" style="height: 80px;"></div>
+              <div class="text-center" style="margin-top: -40px;">
+                <img src="<%= boutique.photoProfil %>" class="rounded-circle border border-3 border-white"
+                  width="80" height="80" style="object-fit: cover; background: #fff;"
+                  onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(boutique.nom) %>&background=E65100&color=fff&size=80'">
+              </div>
+            </div>
+            <div class="card-body text-center">
+              <h5 class="card-title"><%= boutique.nom %></h5>
+              <p class="text-muted small">
+                <i class="fas fa-map-marker-alt me-1"></i><%= boutique.localisation.commune %>
+                <% if (boutique.specialite) { %>
+                  | <i class="fas fa-tag me-1"></i><%= boutique.specialite.replace('_', ' ') %>
+                <% } %>
+              </p>
+              <% if (boutique.noteGlobale > 0) { %>
+                <div class="mb-2">
+                  <% for (let i = 1; i <= 5; i++) { %>
+                    <i class="fas fa-star<%= i <= boutique.noteGlobale ? '' : '-half-alt' %>"
+                      style="color: <%= i <= boutique.noteGlobale ? '#FFC107' : '#E0E0E0' %>"></i>
+                  <% } %>
+                  <small class="text-muted">(<%= boutique.nombreAvis %> avis)</small>
+                </div>
+              <% } %>
+              <a href="/boutique/<%= boutique.slug %>" class="btn btn-primary btn-sm">
+                Visiter la boutique
+              </a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Vendeurs -->
+<section class="py-5 text-white text-center" style="background: linear-gradient(135deg, #1B5E20 0%, #4CAF50 100%);">
+  <div class="container">
+    <h2 class="mb-3">Vous etes patissier, traiteur ou cuisinier ?</h2>
+    <p class="lead mb-4">Rejoignez Saveurs CI et vendez vos creations a des milliers de clients !</p>
+    <a href="/auth/inscription" class="btn btn-warning btn-lg px-5">
+      <i class="fas fa-store me-2"></i>Ouvrir ma boutique gratuitement
+    </a>
+  </div>
+</section>

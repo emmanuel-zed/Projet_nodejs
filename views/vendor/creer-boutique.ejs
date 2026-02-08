@@ -1,0 +1,124 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4">
+            <i class="fas fa-store text-primary"></i> Creer ma boutique
+          </h2>
+          <p class="text-center text-muted mb-4">
+            Configurez votre boutique en quelques etapes et commencez a vendre !
+          </p>
+
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+
+          <form action="/vendeur/creer-boutique" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label class="form-label">Nom de la boutique *</label>
+              <input type="text" class="form-control" name="nom"
+                placeholder="Ex: Les Delices de Marie" required maxlength="100">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Description *</label>
+              <textarea class="form-control" name="description" rows="3"
+                placeholder="Decrivez votre boutique, votre histoire, vos specialites..."
+                required maxlength="1000"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Specialite *</label>
+              <select class="form-select" name="specialite" required>
+                <option value="">Choisir...</option>
+                <option value="patisserie">Patisserie</option>
+                <option value="traiteur">Traiteur</option>
+                <option value="cuisine_maison">Cuisine maison</option>
+                <option value="boulangerie">Boulangerie</option>
+                <option value="boissons">Boissons</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Commune *</label>
+                <select class="form-select" name="commune" required>
+                  <option value="">Choisir...</option>
+                  <option value="Cocody">Cocody</option>
+                  <option value="Plateau">Plateau</option>
+                  <option value="Marcory">Marcory</option>
+                  <option value="Treichville">Treichville</option>
+                  <option value="Yopougon">Yopougon</option>
+                  <option value="Abobo">Abobo</option>
+                  <option value="Adjame">Adjame</option>
+                  <option value="Koumassi">Koumassi</option>
+                  <option value="Port-Bouet">Port-Bouet</option>
+                  <option value="Bingerville">Bingerville</option>
+                  <option value="Riviera">Riviera</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Adresse precise</label>
+                <input type="text" class="form-control" name="details"
+                  placeholder="Ex: Pres du carrefour de la vie">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Telephone</label>
+                <input type="tel" class="form-control" name="telephone"
+                  placeholder="+225 07 XX XX XX XX">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Horaires</label>
+                <input type="text" class="form-control" name="horaires"
+                  placeholder="Lun-Sam: 8h-18h" value="Lun-Sam: 8h-18h">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="livraisonDisponible"
+                  id="livraisonDisponible" onchange="toggleFrais()">
+                <label class="form-check-label" for="livraisonDisponible">
+                  Je propose la livraison
+                </label>
+              </div>
+            </div>
+
+            <div class="mb-3" id="fraisLivraisonDiv" style="display: none;">
+              <label class="form-label">Frais de livraison (FCFA)</label>
+              <input type="number" class="form-control" name="fraisLivraison"
+                placeholder="Ex: 2000" min="0" style="width: 200px;">
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Photo de profil</label>
+                <input type="file" class="form-control" name="photoProfil" accept="image/*">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Photo de banniere</label>
+                <input type="file" class="form-control" name="photoBanniere" accept="image/*">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-lg">
+              <i class="fas fa-rocket me-2"></i>Creer ma boutique
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleFrais() {
+  const checked = document.getElementById('livraisonDisponible').checked;
+  document.getElementById('fraisLivraisonDiv').style.display = checked ? 'block' : 'none';
+}
+</script>

@@ -1,0 +1,168 @@
+<div class="container py-4">
+  <h2 class="mb-4"><i class="fas fa-credit-card me-2"></i>Passer commande</h2>
+
+  <form action="/commander" method="POST">
+    <div class="row">
+      <div class="col-md-8">
+        <!-- Resume commande -->
+        <div class="card shadow-sm mb-3">
+          <div class="card-header"><strong>Resume de la commande</strong></div>
+          <div class="card-body">
+            <% Object.values(articlesParBoutique).forEach(group => { %>
+              <div class="mb-3">
+                <h6><i class="fas fa-store me-2"></i><%= group.boutique.nom %></h6>
+                <% group.articles.forEach(article => { %>
+                  <div class="d-flex justify-content-between text-muted">
+                    <span><%= article.produit.titre %> x<%= article.quantite %></span>
+                    <span><%= article.sousTotal.toLocaleString() %> FCFA</span>
+                  </div>
+                <% }); %>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+
+        <!-- Mode de recuperation -->
+        <div class="card shadow-sm mb-3">
+          <div class="card-header"><strong>Mode de recuperation</strong></div>
+          <div class="card-body">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="modeRecuperation"
+                id="retrait" value="retrait" checked onchange="toggleLivraison()">
+              <label class="form-check-label" for="retrait">
+                <i class="fas fa-store me-1"></i> Retrait en boutique (gratuit)
+              </label>
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="radio" name="modeRecuperation"
+                id="livraison" value="livraison" onchange="toggleLivraison()">
+              <label class="form-check-label" for="livraison">
+                <i class="fas fa-truck me-1"></i> Livraison a domicile
+              </label>
+            </div>
+
+            <div id="adresseLivraison" style="display: none;">
+              <div class="mb-2">
+                <label class="form-label">Commune</label>
+                <select class="form-select" name="communeLivraison">
+                  <option value="Cocody">Cocody</option>
+                  <option value="Plateau">Plateau</option>
+                  <option value="Marcory">Marcory</option>
+                  <option value="Yopougon">Yopougon</option>
+                  <option value="Abobo">Abobo</option>
+                  <option value="Treichville">Treichville</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Adresse precise</label>
+                <textarea class="form-control" name="detailsLivraison" rows="2"
+                  placeholder="Ex: Cocody Riviera 3, pres du carrefour..."></textarea>
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Date de recuperation souhaitee</label>
+              <input type="date" class="form-control" name="dateRecuperation"
+                min="<%= dateMinRecuperation %>" value="<%= dateMinRecuperation %>" required>
+              <small class="text-muted">Minimum <%= new Date(dateMinRecuperation).toLocaleDateString('fr-FR') %> (delai de preparation)</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paiement -->
+        <div class="card shadow-sm mb-3">
+          <div class="card-header"><strong>Mode de paiement</strong></div>
+          <div class="card-body">
+            <div class="row g-2">
+              <div class="col-6 col-md-4">
+                <input type="radio" class="btn-check" name="methodePaiement"
+                  id="orange" value="orange_money" checked>
+                <label class="btn btn-outline-warning w-100 py-3" for="orange">
+                  <i class="fas fa-mobile-alt d-block mb-1"></i>
+                  <small>Orange Money</small>
+                </label>
+              </div>
+              <div class="col-6 col-md-4">
+                <input type="radio" class="btn-check" name="methodePaiement"
+                  id="mtn" value="mtn_money">
+                <label class="btn btn-outline-warning w-100 py-3" for="mtn">
+                  <i class="fas fa-mobile-alt d-block mb-1"></i>
+                  <small>MTN Money</small>
+                </label>
+              </div>
+              <div class="col-6 col-md-4">
+                <input type="radio" class="btn-check" name="methodePaiement"
+                  id="wave" value="wave">
+                <label class="btn btn-outline-primary w-100 py-3" for="wave">
+                  <i class="fas fa-mobile-alt d-block mb-1"></i>
+                  <small>Wave</small>
+                </label>
+              </div>
+              <div class="col-6 col-md-4">
+                <input type="radio" class="btn-check" name="methodePaiement"
+                  id="moov" value="moov_money">
+                <label class="btn btn-outline-info w-100 py-3" for="moov">
+                  <i class="fas fa-mobile-alt d-block mb-1"></i>
+                  <small>Moov Money</small>
+                </label>
+              </div>
+              <div class="col-6 col-md-4">
+                <input type="radio" class="btn-check" name="methodePaiement"
+                  id="carte" value="carte_bancaire">
+                <label class="btn btn-outline-dark w-100 py-3" for="carte">
+                  <i class="fas fa-credit-card d-block mb-1"></i>
+                  <small>Carte bancaire</small>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <label class="form-label">Notes pour le vendeur (optionnel)</label>
+            <textarea class="form-control" name="notes" rows="2"
+              placeholder="Instructions speciales, allergies, etc."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card shadow-sm sticky-top" style="top: 80px;">
+          <div class="card-body">
+            <h5>Total a payer</h5>
+            <hr>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Sous-total</span>
+              <strong><%= total.toLocaleString() %> FCFA</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Livraison</span>
+              <span id="fraisLivraison">Gratuit</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between mb-3">
+              <strong class="fs-5">Total</strong>
+              <strong class="fs-5 text-primary"><%= total.toLocaleString() %> FCFA</strong>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+              <i class="fas fa-check-circle me-2"></i>Confirmer la commande
+            </button>
+            <a href="/panier" class="btn btn-outline-secondary w-100 mt-2">
+              <i class="fas fa-arrow-left me-2"></i>Retour au panier
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+function toggleLivraison() {
+  const livraison = document.getElementById('livraison').checked;
+  document.getElementById('adresseLivraison').style.display = livraison ? 'block' : 'none';
+  document.getElementById('fraisLivraison').textContent = livraison ? 'Selon boutique' : 'Gratuit';
+}
+</script>

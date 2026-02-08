@@ -1,0 +1,35 @@
+{
+  "name": "saveurs-ci",
+  "version": "1.0.0",
+  "description": "Saveurs CI - Marketplace culinaire ivoirienne. Plateforme e-commerce pour patissiers, traiteurs et cuisiniers.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:16259/git/emmanuel-zed/Projet_nodejs"
+  },
+  "keywords": ["marketplace", "food", "ivory-coast", "patisserie", "traiteur"],
+  "author": "Emmanuel",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "connect-mongo": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.4",
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.19.0",
+    "express-validator": "^7.3.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.6",
+    "multer": "^2.0.2",
+    "slugify": "^1.6.6",
+    "socket.io": "^4.8.3"
+  }
+}

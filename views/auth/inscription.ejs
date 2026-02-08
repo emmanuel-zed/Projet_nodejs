@@ -1,0 +1,103 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4">
+            <i class="fas fa-user-plus text-primary"></i> Inscription
+          </h2>
+
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+          <% } %>
+
+          <form action="/auth/inscription" method="POST">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="nom" class="form-label">Nom</label>
+                <input type="text" class="form-control" id="nom" name="nom"
+                  value="<%= typeof body !== 'undefined' && body ? body.nom || '' : '' %>" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="prenom" class="form-label">Prenom</label>
+                <input type="text" class="form-control" id="prenom" name="prenom"
+                  value="<%= typeof body !== 'undefined' && body ? body.prenom || '' : '' %>" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email"
+                value="<%= typeof body !== 'undefined' && body ? body.email || '' : '' %>" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="telephone" class="form-label">Telephone</label>
+              <input type="tel" class="form-control" id="telephone" name="telephone"
+                placeholder="+225 07 XX XX XX XX"
+                value="<%= typeof body !== 'undefined' && body ? body.telephone || '' : '' %>" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="commune" class="form-label">Commune</label>
+              <select class="form-select" id="commune" name="commune">
+                <option value="">Choisir...</option>
+                <option value="Cocody">Cocody</option>
+                <option value="Plateau">Plateau</option>
+                <option value="Marcory">Marcory</option>
+                <option value="Treichville">Treichville</option>
+                <option value="Yopougon">Yopougon</option>
+                <option value="Abobo">Abobo</option>
+                <option value="Adjame">Adjame</option>
+                <option value="Koumassi">Koumassi</option>
+                <option value="Port-Bouet">Port-Bouet</option>
+                <option value="Bingerville">Bingerville</option>
+                <option value="Songon">Songon</option>
+                <option value="Anyama">Anyama</option>
+                <option value="Riviera">Riviera</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Je suis :</label>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="role" id="roleClient" value="client" checked>
+                  <label class="form-check-label" for="roleClient">
+                    <i class="fas fa-shopping-bag me-1"></i> Client
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="role" id="roleVendeur" value="vendeur">
+                  <label class="form-check-label" for="roleVendeur">
+                    <i class="fas fa-store me-1"></i> Vendeur
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="motDePasse" class="form-label">Mot de passe</label>
+              <input type="password" class="form-control" id="motDePasse" name="motDePasse"
+                minlength="6" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmMotDePasse" class="form-label">Confirmer le mot de passe</label>
+              <input type="password" class="form-control" id="confirmMotDePasse" name="confirmMotDePasse"
+                minlength="6" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2">
+              <i class="fas fa-user-plus me-2"></i>S'inscrire
+            </button>
+          </form>
+
+          <p class="text-center mt-3 mb-0">
+            Deja un compte ? <a href="/auth/connexion">Se connecter</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

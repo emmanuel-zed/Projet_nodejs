@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/">
+      <i class="fas fa-utensils me-2"></i>SAVEURS CI
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/explorer">Explorer</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Categories</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/explorer?categorie=gateau_anniversaire">Gateaux anniversaire</a></li>
+            <li><a class="dropdown-item" href="/explorer?categorie=wedding_cake">Wedding cakes</a></li>
+            <li><a class="dropdown-item" href="/explorer?categorie=traiteur_mariage">Traiteur mariage</a></li>
+            <li><a class="dropdown-item" href="/explorer?categorie=plat_ivoirien">Plats ivoiriens</a></li>
+            <li><a class="dropdown-item" href="/explorer?categorie=jus_naturel">Jus naturels</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/explorer">Tout voir</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <form class="d-flex me-3" action="/explorer" method="GET">
+        <input class="form-control me-2" type="search" name="q" placeholder="Rechercher..." aria-label="Rechercher">
+        <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
+      </form>
+
+      <ul class="navbar-nav">
+        <% if (user) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/panier">
+              <i class="fas fa-shopping-cart"></i> Panier
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle"></i> <%= user.prenom %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/auth/profil"><i class="fas fa-user me-2"></i>Mon profil</a></li>
+              <li><a class="dropdown-item" href="/mes-commandes"><i class="fas fa-box me-2"></i>Mes commandes</a></li>
+              <% if (user.role === 'vendeur') { %>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/vendeur/tableau-de-bord"><i class="fas fa-store me-2"></i>Ma boutique</a></li>
+                <li><a class="dropdown-item" href="/vendeur/produits"><i class="fas fa-box-open me-2"></i>Mes produits</a></li>
+                <li><a class="dropdown-item" href="/vendeur/commandes"><i class="fas fa-clipboard-list me-2"></i>Commandes recues</a></li>
+              <% } %>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/auth/deconnexion"><i class="fas fa-sign-out-alt me-2"></i>Deconnexion</a></li>
+            </ul>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/auth/connexion">Connexion</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-warning ms-2" href="/auth/inscription">S'inscrire</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>

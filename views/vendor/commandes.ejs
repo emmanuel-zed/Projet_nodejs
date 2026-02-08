@@ -1,0 +1,104 @@
+<div class="container py-4">
+  <h2 class="mb-4"><i class="fas fa-clipboard-list me-2"></i>Commandes recues</h2>
+
+  <!-- Filtres statut -->
+  <div class="mb-4">
+    <div class="btn-group" role="group">
+      <a href="/vendeur/commandes" class="btn btn-<%= statutFiltre === 'toutes' ? '' : 'outline-' %>secondary">Toutes</a>
+      <a href="/vendeur/commandes?statut=en_attente" class="btn btn-<%= statutFiltre === 'en_attente' ? '' : 'outline-' %>warning">En attente</a>
+      <a href="/vendeur/commandes?statut=confirmee" class="btn btn-<%= statutFiltre === 'confirmee' ? '' : 'outline-' %>info">Confirmees</a>
+      <a href="/vendeur/commandes?statut=en_preparation" class="btn btn-<%= statutFiltre === 'en_preparation' ? '' : 'outline-' %>primary">En preparation</a>
+      <a href="/vendeur/commandes?statut=prete" class="btn btn-<%= statutFiltre === 'prete' ? '' : 'outline-' %>success">Pretes</a>
+    </div>
+  </div>
+
+  <% if (commandes.length === 0) { %>
+    <div class="text-center py-5">
+      <i class="fas fa-inbox text-muted" style="font-size: 4rem;"></i>
+      <h4 class="mt-3 text-muted">Aucune commande</h4>
+    </div>
+  <% } %>
+
+  <% commandes.forEach(cmd => { %>
+    <%
+      const colors = { en_attente: 'warning', confirmee: 'info', en_preparation: 'primary', prete: 'success', livree: 'success', recuperee: 'success', annulee: 'danger' };
+      const labels = { en_attente: 'En attente', confirmee: 'Confirmee', en_preparation: 'En preparation', prete: 'Prete', livree: 'Livree', recuperee: 'Recuperee', annulee: 'Annulee' };
+    %>
+    <div class="card shadow-sm mb-3">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+          <strong>#<%= cmd.numero %></strong>
+          <span class="badge bg-<%= colors[cmd.statut] || 'secondary' %> ms-2">
+            <%= labels[cmd.statut] || cmd.statut %>
+          </span>
+        </div>
+        <small class="text-muted"><%= new Date(cmd.createdAt).toLocaleString('fr-FR') %></small>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <h6>Client</h6>
+            <% if (cmd.client) { %>
+              <p class="mb-0"><strong><%= cmd.client.prenom %> <%= cmd.client.nom %></strong></p>
+              <small class="text-muted">
+                <i class="fas fa-phone me-1"></i><%= cmd.client.telephone %><br>
+                <i class="fas fa-envelope me-1"></i><%= cmd.client.email %>
+              </small>
+            <% } %>
+          </div>
+          <div class="col-md-4">
+            <h6>Articles</h6>
+            <% cmd.articles.forEach(article => { %>
+              <div class="d-flex justify-content-between">
+                <small><%= article.titre %> x<%= article.quantite %></small>
+                <small><%= article.sousTotal.toLocaleString() %> F</small>
+              </div>
+            <% }); %>
+            <hr class="my-1">
+            <div class="d-flex justify-content-between fw-bold">
+              <small>Total</small>
+              <small class="text-primary"><%= cmd.montantFinal.toLocaleString() %> FCFA</small>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h6>Details</h6>
+            <small>
+              <strong>Mode :</strong> <%= cmd.modeRecuperation === 'retrait' ? 'Retrait' : 'Livraison' %><br>
+              <strong>Date :</strong> <%= new Date(cmd.dateRecuperation).toLocaleDateString('fr-FR') %><br>
+              <strong>Paiement :</strong> <%= cmd.paiement.methode.replace(/_/g, ' ') %>
+              <% if (cmd.notes) { %>
+                <br><strong>Notes :</strong> <%= cmd.notes %>
+              <% } %>
+            </small>
+          </div>
+        </div>
+
+        <% if (!['annulee', 'recuperee', 'livree'].includes(cmd.statut)) { %>
+          <hr>
+          <form action="/vendeur/commandes/<%= cmd._id %>/statut" method="POST" class="d-flex gap-2 align-items-center flex-wrap">
+            <label class="form-label mb-0 me-2"><strong>Changer le statut :</strong></label>
+            <select name="statut" class="form-select form-select-sm" style="width: auto;">
+              <% if (cmd.statut === 'en_attente') { %>
+                <option value="confirmee">Confirmer</option>
+                <option value="annulee">Annuler</option>
+              <% } else if (cmd.statut === 'confirmee') { %>
+                <option value="en_preparation">Commencer la preparation</option>
+                <option value="annulee">Annuler</option>
+              <% } else if (cmd.statut === 'en_preparation') { %>
+                <option value="prete">Marquer comme prete</option>
+              <% } else if (cmd.statut === 'prete') { %>
+                <option value="livree">Marquer comme livree</option>
+                <option value="recuperee">Marquer comme recuperee</option>
+              <% } %>
+            </select>
+            <input type="text" name="commentaire" class="form-control form-control-sm" style="width: 200px;"
+              placeholder="Commentaire (optionnel)">
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="fas fa-check me-1"></i>Valider
+            </button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  <% }); %>
+</div>
